@@ -10,14 +10,22 @@ const App = () => {
     setter(path);
   };
 
-  const handleMergeClick = () => {
-    // Send paths to the Electron backend
+  const handleMergeClick = async () => {
+    try {
+      const result = await window.electron.performMerge(sourceFilePath, inputFilePath);
+      if (result) {
+        alert(`Merged file saved to ${result}`);
+      }
+    } catch (err) {
+      console.error(err);
+      alert(err);
+    }
   };
 
   return (
     <div class="container">
       <section class="grid">
-        <label>Source File</label>
+        <label>Template File</label>
         <input type="text" value={sourceFilePath} readOnly />
         <button onClick={() => handleBrowseClick(setSourceFilePath)}>Browse</button>
       </section>

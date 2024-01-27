@@ -1,5 +1,7 @@
 const { app, BrowserWindow, ipcMain, dialog } = require('electron');
 const path = require('path');
+const { mergeExcel } = require('./migration');
+const fs = require('fs');
 const isDev = process.env.NODE_ENV === 'development';
 
 function createWindow() {
@@ -44,5 +46,31 @@ ipcMain.handle('open-file-dialog', async (event, arg) => {
     return '';
   } else {
     return result.filePaths[0]; // return the selected file path
+  }
+});
+
+ipcMain.handle('perform-merge', async (event, sourceFilePath, inputFilePath) => {
+  try {
+    const mergedData = await mergeExcel(sourceFilePath, inputFilePath);
+
+    // Ask the user where to save the generated file
+    const { filePath } = await dialog.showSaveDialog({
+      title: 'Save Merged File',
+      defaultPath: path.join(app.getPath('downloads'), 'mergedFile.docx'),
+      buttonLabel: 'Save',
+      filters: [
+        { name: 'Word Files', extensions: ['docx'] },
+      ],
+    });
+
+    if (filePath) {
+      // Write the merged data to the file
+      fs.writeFileSync(filePath, mergedData);
+    }
+  
+    return filePath;
+  } catch (err) {
+    console.error('Failed to merge files', err);
+    throw err;
   }
 });

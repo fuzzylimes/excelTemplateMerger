@@ -27,5 +27,12 @@
     "webpack": "^5.90.0",
     "webpack-cli": "^5.1.4",
     "webpack-dev-server": "^4.15.1"
+  },
+  "dependencies": {
+    "angular-expressions": "^1.2.1",
+    "docxtemplater": "^3.44.0",
+    "fs-extra": "^11.2.0",
+    "pizzip": "^3.1.6",
+    "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.1/xlsx-0.20.1.tgz"
   }
 }
